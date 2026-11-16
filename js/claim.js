@@ -2,7 +2,7 @@
    Read-only helper for the Claim section: a visitor types a plot
    number, the page reads UrbanovaPlots and UrbanovaClaim state by
    racing the public RPC endpoints from city/config.js, and reports
-   class, claim amount and status, including the daily 09:00 UTC
+   class, claim amount and status, including the daily 11:30 UTC
    claim opening. Nothing is signed and no wallet connects; a copy
    button prepares a ready prompt for the visitor's own agent.
    Every DOM write is null-guarded. Selectors are from the verified ABIs. */
@@ -127,9 +127,9 @@
       var clsName = CLASSES[r.cls] || "Pending";
       var amtText = r.c ? fmtTok(toBig(r.c.amt)) : "?";
       var base = "Plot Nº " + id + " \u00b7 District " + r.dist + " \u00b7 Class " + clsName + ". ";
-      if (!r.sealed) {
+      if (!r.sealed && !(r.c && toInt(r.c.able) === 1)) {
         last = { id: id, claimable: false };
-        setResult(base + "Its district is still building and seals at 00:00 UTC. Claims for it open at 09:00 UTC on seal day.");
+        setResult(base + "Its district is still building and seals at 00:00 UTC. Claims for it open at 11:30 UTC on its final day.");
         return;
       }
       if (!r.c) { setResult(base + "Sealed, but the claim read failed. Try again in a moment."); return; }
@@ -187,7 +187,7 @@
     var txt;
     if (last && last.claimable) {
       txt = "Read https://urbanova.app/skill.md and claim $URBN for my Urbanova plot Nº " + last.id + " on BNB Chain (chain id 56).\n\n" +
-        "Facts already checked on this page: plot Nº " + last.id + ", class " + last.clsName + ", claimable " + last.amountText + " $URBN, district sealed, claim window open, not yet claimed, claim fee " + last.feeText + ".\n\n" +
+        "Facts already checked on this page: plot Nº " + last.id + ", class " + last.clsName + ", claimable " + last.amountText + " $URBN, claim window open, not yet claimed, claim fee " + last.feeText + ".\n\n" +
         "Rules from the skill file:\n" +
         "1. Contract addresses live in https://urbanova.app/city/config.js (URBANOVA_CONFIG). Abort if any address is empty or a zero address.\n" +
         "2. Confirm claimOpen() is 1 on the claim contract, claimedById(" + last.id + ") is 0, claimableNow(" + last.id + ") is 1, and claimAmount(" + last.id + ") matches " + last.amountText + " $URBN. Abort if anything differs.\n" +

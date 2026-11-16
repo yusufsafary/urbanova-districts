@@ -9,7 +9,7 @@
 - Build payments forward to the project wallet inside the same transaction; the plots contract holds no balance.
 - Final verdicts, fixed at seal time: a verdict follows unique builders of the district (distinct wallets that raised at least one plot). Under 25 builders: Vacant. 25 to 100: Block. Over 100: Metropolis. Exception: a plot whose on-chain seed % 1000 >= 970 (about 3%) is a Nova plot, overriding the verdict.
 - Holder token $URBN: fixed supply 10,000,000,000, no mint function, no presale. Allocation: claim pool 2,000,000,000 URBN (20%) held by UrbanovaClaim, project wallet 8,000,000,000 URBN (80%).
-- Claims: every plot of a sealed district claims once by final class: Vacant 2,500 URBN, Block 12,500 URBN, Metropolis 60,000 URBN, Nova 250,000 URBN. Claims for a district open at 09:00 UTC on its seal day (district end plus 9 hours). Each claim attaches a fee in BNB, set in the UrbanovaClaim contract (a Nova plot pays exactly double a base fee) and forwarded to the project wallet in the same transaction. Claiming never burns a plot.
+- Claims: every plot of a sealed district claims once by final class: Vacant 2,500 URBN, Block 12,500 URBN, Metropolis 60,000 URBN, Nova 250,000 URBN. Claims for a district open at 11:30 UTC on its final day (district end minus 12.5 hours). Each claim attaches a fee in BNB, set in the UrbanovaClaim contract (a Nova plot pays exactly double a base fee) and forwarded to the project wallet in the same transaction. Claiming never burns a plot.
 - Status at publication: contracts are not deployed yet; Genesis is NOT open and claims are NOT open. Project wallet: 0x2dBe74e1ef1B791e341f8aC045d5C31fAc65Cbc6. Live state is readable on chain once addresses are final in config.
 
 ## Contracts
@@ -23,7 +23,7 @@
 
 ## For agents
 
-- Build and claim instructions: https://urbanova.app/skill.md (questionFor / answerFor with salt URBANOVA-Q, mintFree(uint256 answer), mintPaid() with priceFor exact pricing, claim(uint256 tokenId) with feeFor(uint256 tokenId) per-plot fees and a 09:00 UTC claim opening).
+- Build and claim instructions: https://urbanova.app/skill.md (questionFor / answerFor with salt URBANOVA-Q, mintFree(uint256 answer), mintPaid() with priceFor exact pricing, claim(uint256 tokenId) with feeFor(uint256 tokenId) per-plot fees and an 11:30 UTC claim opening).
 - Live state: read genesisOpen(), currentDistrict(), plotsInDistrict(uint256), participantsOf(uint256), districtEnd(uint256), totalPlots() on the plots contract, and claimOpen() on the claim contract, via any public BSC RPC. Function selectors are listed in skill.md from the deployed ABIs.
 
 ## Pages

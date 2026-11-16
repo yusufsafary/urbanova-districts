@@ -168,7 +168,7 @@
     if (dwCtx.kind === "running") {
       setDw("dw-count", dwCtx.endTs ? (now >= dwCtx.endTs ? "Sealing…" : "Seals in " + hms(dwCtx.endTs - now)) : "—");
     } else {
-      var open = dwCtx.endTs ? dwCtx.endTs + 32400 : 0;
+      var open = dwCtx.endTs ? dwCtx.endTs - 45000 : 0;
       setDw("dw-count", open ? (now >= open ? "Claims open now" : "Claims in " + hms(open - now)) : "—");
     }
   }
@@ -188,12 +188,12 @@
     var art = $("dw-art"); if (art) art.src = ART[vidx];
     setDw("dw-artcap", "Plate sample · " + VERDICTS[vidx] + " class art");
     setDw("dw-note", d.kind === "sealed"
-      ? "Sealed for good. Every plot of District Nº " + fmt(n) + " claims once at a final verdict rate, from 09:00 UTC on seal day. A plot whose own seed lands at 970 or higher modulo 1000 turns Nova and claims 250,000 $URBN."
+      ? "Sealed for good. Every plot of District Nº " + fmt(n) + " claims once at a final verdict rate, from 11:30 UTC on its final day. A plot whose own seed lands at 970 or higher modulo 1000 turns Nova and claims 250,000 $URBN."
       : "District Nº " + fmt(n) + " is building now. Verdict follows unique builders at seal time, and a plot seed at 970 or higher modulo 1000 turns Nova and claims 250,000 $URBN.");
     if (d.kind === "running") {
       setDw("dw-day", fmtDay(dwCtx.endTs));
       setDw("dw-seal", dwCtx.endTs ? fmtTs(dwCtx.endTs) : "Opens by hand · Genesis");
-      setDw("dw-open", dwCtx.endTs ? fmtTs(dwCtx.endTs + 32400) : "09:00 UTC on seal day");
+      setDw("dw-open", dwCtx.endTs ? fmtTs(dwCtx.endTs - 45000) : "11:30 UTC on final day");
       tickDrawer();
     } else {
       setDw("dw-day", "…"); setDw("dw-seal", "…"); setDw("dw-open", "…"); setDw("dw-count", "…");
@@ -202,7 +202,7 @@
         dwCtx.endTs = endTs;
         setDw("dw-day", fmtDay(endTs));
         setDw("dw-seal", fmtTs(endTs));
-        setDw("dw-open", endTs ? fmtTs(endTs + 32400) : "09:00 UTC on seal day");
+        setDw("dw-open", endTs ? fmtTs(endTs - 45000) : "11:30 UTC on final day");
         tickDrawer();
       });
     }
@@ -257,14 +257,14 @@
   var dcSlider = $("dc-slider"), dcScrubT = $("dc-scrub-t"), dcLiveBtn = $("dc-live");
   var dcPreview = null; // seconds into a day while previewing, else null
   var dcIdleTimer = null;
-  function phaseOf(sec) { return sec < 32400 ? "Sealed · claims pending" : "Claims open"; }
+  function phaseOf(sec) { return sec < 41400 ? "Building · claims pending" : "Claims open"; }
   function renderClock(sec, live) {
     var pct = (sec / 86400) * 100;
     if (dcFill) dcFill.style.width = pct + "%";
     if (dcNeedle) dcNeedle.style.left = pct + "%";
     if (dcPhase) {
-      if (sec < 32400) dcPhase.innerHTML = "A district sealed at 00:00 UTC. <b>Claims for it open at 09:00 UTC</b>, in " + hms(32400 - sec) + ". A running district keeps building all day.";
-      else dcPhase.innerHTML = "<b>Claims open now</b> for every sealed district. A running district seals at 00:00 UTC, in " + hms(86400 - sec) + ".";
+      if (sec < 41400) dcPhase.innerHTML = "A district is building. <b>Claims for it open at 11:30 UTC</b>, in " + hms(41400 - sec) + ". Its plots keep rising until the 00:00 UTC seal.";
+      else dcPhase.innerHTML = "<b>Claims open now</b> for the running district and every sealed district. A running district seals at 00:00 UTC, in " + hms(86400 - sec) + ".";
     }
     if (dcScrubT) {
       dcScrubT.textContent = live
@@ -432,7 +432,7 @@
         return;
       }
       if (snap.sealed > feedSeen.sealed && snap.lastSealed) {
-        feedAdd("District Nº " + snap.lastSealed.n + " sealed · " + VERDICTS[snap.lastSealed.verdict || 1] + " · claims open 09:00 UTC");
+        feedAdd("District Nº " + snap.lastSealed.n + " sealed · " + VERDICTS[snap.lastSealed.verdict || 1] + " · claims open 11:30 UTC");
       } else if (snap.n === feedSeen.n && snap.plots > feedSeen.plots) {
         var dPlots = snap.plots - feedSeen.plots;
         feedAdd(dPlots === 1 ? "A plot was raised · District Nº " + snap.n + " at " + fmt(snap.plots) + " plots" : dPlots + " plots raised · District Nº " + snap.n + " at " + fmt(snap.plots) + " plots");

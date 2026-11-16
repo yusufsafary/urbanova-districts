@@ -167,7 +167,7 @@
       sealTs = 0;
       setText("b-seal", "Sealed"); setText("mb-seal", "Sealed");
       setText("h-status", "Sealed"); setText("b-status", "Sealed");
-      setText("b-note", "District Nº " + fmt(dist) + " is sealed for good. A fresh district starts at 00:00 UTC. Claims for a sealed district open at 09:00 UTC on its seal day.");
+      setText("b-note", "District Nº " + fmt(dist) + " is sealed for good. A fresh district starts at 00:00 UTC. Claims for a district open at 11:30 UTC on its final day.");
     }
     var bs = window.URBANOVA_BOARD_STATE || { sealed: [] };
     bs.running = { n: dist, plots: plots, builders: builders };
@@ -262,15 +262,15 @@
     var el = $("c-pool"); if (el) el.textContent = fmtPool(poolHex);
     setText("c-status", open ? "OPEN" : "SOON");
     setText("c-note", open
-      ? "Claims are open. A sealed district joins each daily opening at 09:00 UTC. Send your Binance agent a claim prompt below, one call per plot."
-      : "Claims are not open yet. Plots of sealed districts become claimable once claims open, at 09:00 UTC on each seal day. Watch this board.");
+      ? "Claims are open. Each district joins the daily opening at 11:30 UTC on its final day. Send your Binance agent a claim prompt below, one call per plot."
+      : "Claims are not open yet. Plots of sealed districts become claimable once claims open, at 11:30 UTC on each district's final day. Watch this board.");
   }
   var lastClaimed = 0;
   var prevTotal = null;
   function raceClaim() {
     if (!isAddr(CLAIM)) {
       setText("c-status", "SOON");
-      setText("c-note", "Claims are not open yet. Plots of sealed districts become claimable once claims open, at 09:00 UTC on each seal day. Watch this board.");
+      setText("c-note", "Claims are not open yet. Plots of sealed districts become claimable once claims open, at 11:30 UTC on each district's final day. Watch this board.");
       raceDistrict(0);
       return;
     }

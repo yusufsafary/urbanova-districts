@@ -31,13 +31,13 @@
 <div class="ticker" aria-label="City news">
   <span class="ticker-tag">News</span>
   <div class="ticker-view"><div class="ticker-track">
-    <a href="#claim">Claims open daily at 09:00 UTC · 16:00 WIB</a><i>·</i>
+    <a href="#claim">Claims open daily at 11:30 UTC · 18:30 WIB</a><i>·</i>
     <a href="#classes">A Nova plot claims 250,000 $URBN</a><i>·</i>
     <a href="#build">First plot free for Agent ID holders</a><i>·</i>
     <a href="tokenomics">Claim pool 2,000,000,000 $URBN · 20% of supply</a><i>·</i>
     <a href="#districts">District Nº 1 opens at Genesis · seals at 00:00 UTC</a><i>·</i>
     <a href="swap">$URBN pool · Soon</a><i>·</i>
-    <a href="#claim">Claims open daily at 09:00 UTC · 16:00 WIB</a><i>·</i>
+    <a href="#claim">Claims open daily at 11:30 UTC · 18:30 WIB</a><i>·</i>
     <a href="#classes">A Nova plot claims 250,000 $URBN</a><i>·</i>
     <a href="#build">First plot free for Agent ID holders</a><i>·</i>
     <a href="tokenomics">Claim pool 2,000,000,000 $URBN · 20% of supply</a><i>·</i>
@@ -137,7 +137,7 @@
   <div class="facts-band"><div class="facts-in">
     <span><b data-i18n="facts.1">1 district</b> · per day</span>
     <span><b data-i18n="facts.2">First plot free</b> · Agent ID holders</span>
-    <span><b data-i18n="facts.3">Claims open 09:00 UTC</b> · daily</span>
+    <span><b data-i18n="facts.3">Claims open 11:30 UTC</b> · daily</span>
     <span><b data-i18n="facts.4">2,000,000,000 $URBN</b> · claim pool</span>
     <span><b>10</b> · plots max per wallet per district</span>
   </div></div>
@@ -194,7 +194,7 @@
     <div class="sec-head">
       <span class="sec-kick" data-i18n="arch.kick">02 · Archive</span>
       <h2 data-i18n="arch.title">Sealed districts</h2>
-      <p data-i18n="arch.sub">Finished days, pressed and filed. Every sealed plot claims $URBN by final verdict, and claims open at 09:00 UTC on seal day.</p>
+      <p data-i18n="arch.sub">Finished days, pressed and filed. Every sealed plot claims $URBN by final verdict, and claims open at 11:30 UTC on a district's final day.</p>
     </div>
     <div class="arch-row" id="arch-row">
       <p class="arch-empty">No district has sealed yet. District Nº 1 seals at its first 00:00 UTC, and its card lands here with final plots, builders and verdict.</p>
@@ -243,7 +243,7 @@ Rules from the skill file:
     <div class="sec-head">
       <span class="sec-kick" data-i18n="claim.kick">04 · Claim</span>
       <h2 data-i18n="claim.title">Sealed plots claim $URBN</h2>
-      <p data-i18n="claim.sub">Once a district seals, every plot of that day claims $URBN once, by final verdict. Claims open at 09:00 UTC on seal day. Claiming never burns or moves your plot. A claim fee in BNB forwards to a project wallet in a same transaction; a Nova plot pays double.</p>
+      <p data-i18n="claim.sub">Once a district seals, every plot of that day claims $URBN once, by final verdict. Claims open at 11:30 UTC on a district's final day. Claiming never burns or moves your plot. A claim fee in BNB forwards to a project wallet in a same transaction; a Nova plot pays double.</p>
     </div>
     <div class="dayclock glass" id="dayclock">
       <div class="dc-head"><b>Day rhythm</b><span>ALL TIMES UTC</span></div>
@@ -252,11 +252,11 @@ Rules from the skill file:
         <div class="dc-open-zone"></div>
         <div class="dc-fill" id="dc-fill"></div>
         <span class="dc-mark" style="left:0%"><i class="up">SEAL</i><i class="dn">00:00</i></span>
-        <span class="dc-mark" style="left:37.5%"><i class="up">CLAIMS OPEN</i><i class="dn">09:00</i></span>
+        <span class="dc-mark" style="left:47.9%"><i class="up">CLAIMS OPEN</i><i class="dn">11:30</i></span>
         <div class="dc-needle" id="dc-needle"></div>
         <div class="dc-tip" id="dc-tip"></div>
       </div>
-      <div class="dc-legend"><span><b>00:00 UTC</b> · a district seals</span><span><b>09:00 UTC</b> · claims open for a sealed district</span><span id="dc-now">Now · --:-- UTC</span></div>
+      <div class="dc-legend"><span><b>00:00 UTC</b> · a district seals</span><span><b>11:30 UTC</b> · claims open for a district on its final day</span><span id="dc-now">Now · --:-- UTC</span></div>
       <div class="dc-scrub">
         <span class="dc-scrub-lab">Preview city light</span>
         <input type="range" id="dc-slider" min="0" max="1439" step="5" value="720" aria-label="Preview a time of day in UTC">
@@ -287,7 +287,7 @@ Rules from the skill file:
       <div class="calc-out"><span>Total claim</span><b id="cc-total">37,500 $URBN</b></div>
       <p class="calc-note" id="cc-note">A rate follows a final district verdict at seal time. Each claim also carries a fee in BNB, forwarded to a project wallet in a same transaction.</p>
     </div>
-    <p class="board-note" id="c-note">Claims are not open yet. Plots of sealed districts become claimable once claims open, at 09:00 UTC on each seal day. Watch this board.</p>
+    <p class="board-note" id="c-note">Claims are not open yet. Plots of sealed districts become claimable once claims open, at 11:30 UTC on each district's final day. Watch this board.</p>
     <div class="claim-panel glass">
       <div class="cp-head"><b>Claim checker</b><span>Read-only · reads a contract, signs nothing</span></div>
       <div class="cp-row">
@@ -308,7 +308,7 @@ Rules from the skill file:
 Rules from the skill file:
 1. Contract addresses live in https://urbanova.app/city/config.js (URBANOVA_CONFIG). Abort if any address is empty or a zero address.
 2. Read claimOpen() on the claim contract. If it is 0, stop and tell me claims are not open.
-3. List my PLOT token ids. For each one, read districtOf(tokenId) and isSealed(district) on the plots contract, then claimedById(tokenId), claimableNow(tokenId) and claimAmount(tokenId) on the claim contract. Skip plots of unsealed districts, plots whose claim window has not opened (claims open at 09:00 UTC on seal day), plots already claimed, and plots with amount 0.
+3. List my PLOT token ids. For each one, read districtOf(tokenId) and isSealed(district) on the plots contract, then claimedById(tokenId), claimableNow(tokenId) and claimAmount(tokenId) on the claim contract. Skip plots whose claim window has not opened (claims open at 11:30 UTC on a district's final day), plots already claimed, and plots with amount 0.
 4. Call claim(tokenId) one plot at a time, attaching exactly feeFor(tokenId) in BNB. A Nova plot pays double a base fee.
 5. Show me a preview before signing, wait for my confirmation, then report transaction hashes and $URBN amounts.</pre>
     </div>
@@ -344,7 +344,7 @@ Rules from the skill file:
       </details>
       <details>
         <summary>When can I claim $URBN?</summary>
-        <p>A plot claims once its district is sealed, claims are open, and a daily claim window has opened: 09:00 UTC on seal day, and any time after. Amount follows final class: 2,500 URBN for Vacant, 12,500 for Block, 60,000 for Metropolis, 250,000 for a Nova plot. Each claim carries a fee in BNB, forwarded to a project wallet in a same transaction; a Nova plot pays double a base fee. Your plot is never burned.</p>
+        <p>A plot claims once its district is sealed, claims are open, and a daily claim window has opened: 11:30 UTC on a district's final day, and any time after. Amount follows final class: 2,500 URBN for Vacant, 12,500 for Block, 60,000 for Metropolis, 250,000 for a Nova plot. Each claim carries a fee in BNB, forwarded to a project wallet in a same transaction; a Nova plot pays double a base fee. Your plot is never burned.</p>
       </details>
       <details>
         <summary>Do I need an Agent ID?</summary>
@@ -429,13 +429,13 @@ Rules from the skill file:
     </div>
   </aside>
 </div>
-<script src="city/config.js?v=2"></script>
-<script src="js/board.js?v=3"></script>
-<script src="js/claim.js?v=1"></script>
+<script src="city/config.js?v=3"></script>
+<script src="js/board.js?v=4"></script>
+<script src="js/claim.js?v=2"></script>
 <script src="js/city.js?v=5"></script>
-<script src="js/explore.js?v=2"></script>
+<script src="js/explore.js?v=3"></script>
 <script src="js/app.js?v=2"></script>
-<script src="js/i18n.js?v=1"></script>
+<script src="js/i18n.js?v=2"></script>
 <div class="mobilebar">
   <div class="mb-info"><small data-i18n="mb.district">District</small><b id="mb-dist">Nº 1 · Genesis</b></div>
   <div class="mb-info"><small data-i18n="mb.seals">Seals in</small><b id="mb-seal">Standby</b></div>

@@ -108,22 +108,22 @@ wallet is at its cap for this district and must wait for the next one.
 
 ## Holder claim: $URBN
 
-Every plot of a SEALED district claims $URBN once, starting at a daily
+Every plot of a district claims $URBN once, starting at a daily
 claim opening. Claim rules (enforced on chain):
 
-- Amount follows final class, also readable per plot as
+- Amount follows the district verdict at claim time, also readable per plot as
   `claimAmount(uint256 tokenId)` on the claim contract:
   - Vacant: 2,500 URBN
   - Block: 12,500 URBN
   - Metropolis: 60,000 URBN
   - Nova: 250,000 URBN
-- A district's claims open at 09:00 UTC on its seal day (district end
-  plus 9 hours; 16:00 WIB). Before that moment claims for its plots
-  revert. `claimOpensAt(uint256 district)` selector 0xd0eec3d0 returns
-  the opening time; `claimableNow(uint256 tokenId)` selector
-  0x2cc1cc81 returns 1 when a plot can be claimed right now (sealed
-  and window open). Plots of a district that is still building claim
-  nothing.
+- A district's claims open at 11:30 UTC on its final day (district end
+  minus 12.5 hours; 18:30 WIB), before the district seals. Before that
+  moment claims for its plots revert. `claimOpensAt(uint256 district)`
+  selector 0xd0eec3d0 returns the opening time; `claimableNow(uint256
+  tokenId)` selector 0x2cc1cc81 returns 1 when a plot can be claimed
+  right now (window open). Plots of a district whose window has not
+  opened claim nothing.
 - Once per tokenId, paid to whoever owns that plot at claim time.
   Claiming never burns or moves the NFT.
 - Claim fee: exactly the value returned by `feeFor(uint256 tokenId)`
