@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>URBANOVA DISTRICTS · A city built one district a day, on BNB Chain</title>
+<meta name="description" content="Urbanova Districts opens one on-chain district a day for Binance Agentic Wallet agents. Agents raise a Plot each day, unique builders decide a district verdict, and sealed plots claim $URBN.">
+<meta property="og:title" content="URBANOVA DISTRICTS">
+<meta property="og:description" content="One district a day. One plot per builder. Verdict decided by everyone who shows up. First plot free for Agent ID holders.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://urbanova.app/">
+<meta property="og:image" content="https://urbanova.app/img/city-hero.png?v=1">
+<link rel="icon" href="img/logo-avatar.png?v=1">
+<link rel="stylesheet" href="css/site.css?v=2">
+<link rel="stylesheet" href="css/home.css?v=1">
+</head>
+<body>
+
+<div class="ticker" aria-label="City news">
+  <span class="ticker-tag">News</span>
+  <div class="ticker-view"><div class="ticker-track">
+    <a href="#claim">Claims open daily at 09:00 UTC · 16:00 WIB</a><i>·</i>
+    <a href="#classes">A Nova plot claims 250,000 $URBN</a><i>·</i>
+    <a href="#build">First plot free for Agent ID holders</a><i>·</i>
+    <a href="tokenomics">Claim pool 2,000,000,000 $URBN · 20% of supply</a><i>·</i>
+    <a href="#districts">District Nº 1 opens at Genesis · seals at 00:00 UTC</a><i>·</i>
+    <a href="swap">$URBN pool · Soon</a><i>·</i>
+    <a href="#claim">Claims open daily at 09:00 UTC · 16:00 WIB</a><i>·</i>
+    <a href="#classes">A Nova plot claims 250,000 $URBN</a><i>·</i>
+    <a href="#build">First plot free for Agent ID holders</a><i>·</i>
+    <a href="tokenomics">Claim pool 2,000,000,000 $URBN · 20% of supply</a><i>·</i>
+    <a href="#districts">District Nº 1 opens at Genesis · seals at 00:00 UTC</a><i>·</i>
+    <a href="swap">$URBN pool · Soon</a><i>·</i>
+  </div></div>
+</div>
+
+<header class="top">
+  <a class="brand" href="/"><img src="img/logo.svg?v=1" alt="Urbanova mark"><span>URBANOVA<b>·</b>DISTRICTS</span></a>
+  <div class="top-r">
+    <span class="lang-sw" role="group" aria-label="Language">
+      <button type="button" data-lang="en" class="on">EN</button><button type="button" data-lang="zh">繁體</button>
+    </span>
+    <a class="x-link" href="https://x.com/urbanovaapp">X · @urbanovaapp</a>
+    <span class="status-pill"><i class="dot"></i><span id="h-status">Standby</span></span>
+  </div>
+</header>
+
+<nav class="collar" aria-label="Main">
+  <div class="collar-in">
+    <a href="#districts" data-i18n="nav.today">Today</a>
+    <a href="#build" data-i18n="nav.build">Build</a>
+    <a href="#classes" data-i18n="nav.classes">Classes</a>
+    <a href="#claim" data-i18n="nav.claim">Claim</a>
+    <a href="tokenomics" data-i18n="nav.tokenomics">Tokenomics</a>
+    <a href="docs" data-i18n="nav.docs">Docs</a>
+    <a href="swap" data-i18n="nav.swap">Swap</a>
+    <a href="https://x.com/urbanovaapp" data-i18n="nav.x">X</a>
+    <span class="pill">urbanova.app</span>
+  </div>
+</nav>
+
+<main id="top">
+
+  <!-- ===== Hero: living city plate ===== -->
+  <section class="hero" id="districts">
+    <div class="chips">
+      <span class="chip" id="b-dist">Nº 1 · Genesis</span>
+      <span class="chip dim" data-i18n="hero.kick2">Seals at 00:00 UTC</span>
+      <span class="chip dim" data-i18n="hero.kick3">BNB Chain</span>
+    </div>
+    <h1 data-i18n="hero.title">One district a day.<br>Built by <em>every builder.</em></h1>
+    <p class="sub" data-i18n="hero.sub">Urbanova opens one district a day for Binance Agentic Wallet agents. You raise a plot, and how many unique builders show up that day decides what a district becomes.</p>
+
+    <div class="stage">
+      <div class="stage-glow" aria-hidden="true"></div>
+      <div class="stage-frame"><canvas id="city-canvas" width="1160" height="740" role="img" aria-label="Animated isometric city plate: sealed districts lit amber, a running district pulsing, future districts pale"></canvas></div>
+      <span class="stage-tag" id="stage-verdict">Verdict · Pending</span>
+      <span class="stage-tag alt" id="stage-dist">District Nº 1</span>
+    </div>
+
+    <div class="gauge">
+      <div class="gauge-head"><span id="f-proj" data-i18n="gauge.projected">Projected verdict · Awaiting first district</span><span class="gauge-live"><b id="g-part">0</b> <span data-i18n="gauge.live">unique builders · seals in</span> <b id="g-count">--:--:--</b></span></div>
+      <div class="gauge-tube"><div class="gauge-fill" id="f-bar"></div><i class="mark m25"></i><i class="mark m100"></i><i class="gauge-needle" id="g-needle"></i></div>
+      <div class="gauge-labels"><span>Vacant · under 25 · claims 2,500</span><span>Block · 25 to 100 · claims 12,500</span><span>Metropolis · 100+ · claims 60,000</span></div>
+      <p class="gauge-note" id="f-note">Verdict follows unique builders on a day: under 25 stays Vacant, 25 to 100 stands as Block, over 100 rises as Metropolis. Claim values in $URBN, per sealed plot.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><b id="b-plots">0</b><span data-i18n="stat.plots">Plots today</span></div>
+      <div class="stat"><b id="b-builders">0</b><span data-i18n="stat.builders">Builders</span></div>
+      <div class="stat"><b id="b-seal">Not opened</b><span data-i18n="stat.seals">Seals in</span></div>
+      <div class="stat"><b id="b-status">Standby</b><span data-i18n="stat.status">Status</span></div>
+    </div>
+    <div class="ledger" aria-label="City ledger">
+      <div class="stat"><b id="g-total">···</b><span data-i18n="ledger.total">Plots raised, all districts</span></div>
+      <div class="stat"><b id="g-unclaimed">···</b><span data-i18n="ledger.unclaimed">Sealed plots unclaimed</span></div>
+      <div class="stat"><b id="g-claimed">···</b><span data-i18n="ledger.claimed">Plots claimed</span></div>
+    </div>
+    <p class="board-note" id="b-note">District Nº 1 opens at Genesis. Its window runs to 00:00 UTC, then it seals for good.</p>
+
+    <div class="cta-row">
+      <a class="btn primary" href="#build" data-i18n="hero.cta1">Build with your agent</a>
+      <a class="btn ghost" href="#claim" data-i18n="hero.cta2">Claim $URBN</a>
+      <a class="btn ghost" href="skill.md" data-i18n="hero.cta3">Skill file</a>
+    </div>
+  </section>
+
+  <div class="facts-band"><div class="facts-in">
+    <span><b data-i18n="facts.1">1 district</b> · per day</span>
+    <span><b data-i18n="facts.2">First plot free</b> · Agent ID holders</span>
+    <span><b data-i18n="facts.3">Claims open 09:00 UTC</b> · daily</span>
+    <span><b data-i18n="facts.4">2,000,000,000 $URBN</b> · claim pool</span>
+    <span><b>10</b> · plots max per wallet per district</span>
+  </div></div>
+
+  <!-- ===== Classes ===== -->
+  <section class="sec" id="classes">
+    <div class="sec-head">
+      <span class="sec-kick" data-i18n="classes.kick">01 · Classes</span>
+      <h2 data-i18n="classes.title">What today can become</h2>
+      <p data-i18n="classes.sub">Verdict locks in at seal time and sets a $URBN claim. A plot whose own seed lands at 970 or higher modulo 1000 turns Nova, whatever a crowd did.</p>
+    </div>
+    <div class="class-row">
+      <article class="class-card">
+        <div class="cc-art"><img src="img/class-vacant.png?v=1" alt="A Vacant plot: an empty lot with dashed foundation lines and corner stakes" loading="lazy" decoding="async"></div>
+        <div class="cc-body">
+          <h3>Vacant</h3>
+          <span class="cc-thr">Under 25 builders</span>
+          <p>A quiet day. A plot stays surveyed land: foundation lines drawn, stakes set, nothing raised yet.</p>
+          <span class="cc-claim">Claims 2,500 $URBN</span>
+        </div>
+      </article>
+      <article class="class-card">
+        <div class="cc-art"><img src="img/class-block.png?v=1" alt="A Block plot: low amber blocks on an isometric lot" loading="lazy" decoding="async"></div>
+        <div class="cc-body">
+          <h3>Block</h3>
+          <span class="cc-thr">25 to 100 builders</span>
+          <p>A proper turnout. Low amber blocks rise across a lot and a street takes shape.</p>
+          <span class="cc-claim">Claims 12,500 $URBN</span>
+        </div>
+      </article>
+      <article class="class-card">
+        <div class="cc-art"><img src="img/class-metropolis.png?v=1" alt="A Metropolis plot: lit amber towers on an isometric lot" loading="lazy" decoding="async"></div>
+        <div class="cc-body">
+          <h3>Metropolis</h3>
+          <span class="cc-thr">Over 100 builders</span>
+          <p>A crowd day. Towers climb, windows light up, and a district joins a skyline.</p>
+          <span class="cc-claim">Claims 60,000 $URBN</span>
+        </div>
+      </article>
+      <article class="class-card nova">
+        <div class="cc-art"><img src="img/class-nova.png?v=1" alt="A Nova plot: a golden tower with a starburst over an isometric lot" loading="lazy" decoding="async"></div>
+        <div class="cc-body">
+          <h3>Nova</h3>
+          <span class="cc-thr">Seed % 1000 ≥ 970 · ±3%</span>
+          <p>Ignores a crowd and erupts on its own seed: a golden tower and a starburst over a district.</p>
+          <span class="cc-claim">Claims 250,000 $URBN</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===== Archive ===== -->
+  <section class="sec" id="archive">
+    <div class="sec-head">
+      <span class="sec-kick" data-i18n="arch.kick">02 · Archive</span>
+      <h2 data-i18n="arch.title">Sealed districts</h2>
+      <p data-i18n="arch.sub">Finished days, pressed and filed. Every sealed plot claims $URBN by final verdict, and claims open at 09:00 UTC on seal day.</p>
+    </div>
+    <div class="arch-row" id="arch-row">
+      <p class="arch-empty">No district has sealed yet. District Nº 1 seals at its first 00:00 UTC, and its card lands here with final plots, builders and verdict.</p>
+    </div>
+  </section>
+
+  <!-- ===== Build ===== -->
+  <section class="sec" id="build">
+    <div class="sec-head">
+      <span class="sec-kick" data-i18n="build.kick">03 · Build</span>
+      <h2 data-i18n="build.title">Build with your agent</h2>
+      <p data-i18n="build.sub">No wallet connects to this site. Your Binance agent does building: paste a prompt, approve a transaction. Payments forward to a project wallet inside a same transaction.</p>
+    </div>
+    <div class="ladder">
+      <div class="rung"><span class="r-n">1st</span><span class="r-t">First plot of a district<b>Agent ID + a short on-chain question</b></span><span class="r-p free">FREE</span></div>
+      <div class="rung"><span class="r-n">2–5</span><span class="r-t">Plots two to five<b>One mint call each</b></span><span class="r-p">0.0002 BNB</span></div>
+      <div class="rung"><span class="r-n">6–10</span><span class="r-t">Plots six to ten<b>Hard cap per wallet, per district</b></span><span class="r-p">0.0004 BNB</span></div>
+    </div>
+    <div class="calc glass">
+      <div class="calc-head"><b>Build calculator</b><span>Plan a day of building</span></div>
+      <div class="calc-row">
+        <input type="range" id="calc-range" min="1" max="10" step="1" value="3" aria-label="Plots to raise">
+        <div class="calc-n"><span id="calc-n">3</span><small>plots</small></div>
+      </div>
+      <p class="calc-rows" id="calc-rows">FREE + 0.0002 + 0.0002</p>
+      <div class="calc-out"><span>Total</span><b id="calc-total">0.0004 BNB</b></div>
+      <p class="calc-note" id="calc-note">Reading a city plan.</p>
+    </div>
+    <div class="console glass">
+      <div class="console-head"><b>Agent prompt</b><button class="copy-btn" id="copy-prompt" type="button">Copy prompt</button></div>
+      <pre id="agent-prompt">Read https://urbanova.app/skill.md and raise Urbanova plots (PLOT) for me on BNB Chain (chain id 56).
+
+Rules from the skill file:
+1. Contract addresses live in https://urbanova.app/city/config.js (URBANOVA_CONFIG). Abort if any address is empty or a zero address.
+2. Confirm I hold an Agent ID (SPACE ID registry 0x60B9262456dE011F7d15a54CdD8c48bAaa8B022F).
+3. Read currentDistrict() and genesisOpen() on the plots contract. If Genesis is not open yet, stop and tell me.
+4. My first plot of a district is free: call questionFor(myAddress), solve its arithmetic question, then call mintFree(answer) with no value.
+5. Paid plots: call mintPaid() one plot at a time, attaching exactly priceFor(myAddress). Plots 2 to 5 cost 0.0002 BNB, plots 6 to 10 cost 0.0004 BNB. Max 10 plots per wallet per district.
+6. Show me a preview before signing, wait for my confirmation, then report the transaction hash and my new token ids.</pre>
+      <p class="fine">Full instructions: <a href="skill.md">skill.md</a> · <a href="llms.txt">llms.txt</a> · <a href="docs">Docs</a></p>
+    </div>
+  </section>
+
+  <!-- ===== Claim ===== -->
+  <section class="sec" id="claim">
+    <div class="sec-head">
+      <span class="sec-kick" data-i18n="claim.kick">04 · Claim</span>
+      <h2 data-i18n="claim.title">Sealed plots claim $URBN</h2>
+      <p data-i18n="claim.sub">Once a district seals, every plot of that day claims $URBN once, by final verdict. Claims open at 09:00 UTC on seal day. Claiming never burns or moves your plot. A claim fee in BNB forwards to a project wallet in a same transaction; a Nova plot pays double.</p>
+    </div>
+    <div class="claim-stats">
+      <div class="stat"><b id="c-claimed">0</b><span data-i18n="cstat.claimed">Claimed</span></div>
+      <div class="stat"><b id="c-pool">0</b><span data-i18n="cstat.pool">Claim pool</span></div>
+      <div class="stat"><b id="c-status">SOON</b><span data-i18n="cstat.status">Status</span></div>
+      <div class="stat"><b id="c-open">--:--:--</b><span data-i18n="cstat.open">Next claim opening in</span></div>
+    </div>
+    <p class="board-note" id="c-note">Claims are not open yet. Plots of sealed districts become claimable once claims open, at 09:00 UTC on each seal day. Watch this board.</p>
+    <div class="claim-panel glass">
+      <div class="cp-head"><b>Claim checker</b><span>Read-only · reads a contract, signs nothing</span></div>
+      <div class="cp-row">
+        <input id="ck-id" type="number" min="1" step="1" inputmode="numeric" placeholder="Your plot Nº, e.g. 3" aria-label="Plot number">
+        <button class="btn primary cp-btn" id="ck-go" type="button">Check plot</button>
+      </div>
+      <p class="cp-result" id="ck-result">Enter a plot number to see its class, claim amount and status.</p>
+      <div class="cp-actions">
+        <button class="btn primary" id="ck-copy" type="button">Copy claim prompt for my agent</button>
+        <a class="btn ghost" href="skill.md">Skill file</a>
+      </div>
+      <p class="fine">One tap copies a ready prompt. Your agent verifies, shows a preview, signs and pays a claim fee. This page never connects a wallet.</p>
+    </div>
+    <div class="console glass">
+      <div class="console-head"><b>Claim prompt</b><button class="copy-btn" id="copy-prompt-claim" type="button">Copy prompt</button></div>
+      <pre id="claim-prompt">Read https://urbanova.app/skill.md and claim $URBN for my Urbanova plots on BNB Chain (chain id 56).
+
+Rules from the skill file:
+1. Contract addresses live in https://urbanova.app/city/config.js (URBANOVA_CONFIG). Abort if any address is empty or a zero address.
+2. Read claimOpen() on the claim contract. If it is 0, stop and tell me claims are not open.
+3. List my PLOT token ids. For each one, read districtOf(tokenId) and isSealed(district) on the plots contract, then claimedById(tokenId), claimableNow(tokenId) and claimAmount(tokenId) on the claim contract. Skip plots of unsealed districts, plots whose claim window has not opened (claims open at 09:00 UTC on seal day), plots already claimed, and plots with amount 0.
+4. Call claim(tokenId) one plot at a time, attaching exactly feeFor(tokenId) in BNB. A Nova plot pays double a base fee.
+5. Show me a preview before signing, wait for my confirmation, then report transaction hashes and $URBN amounts.</pre>
+    </div>
+  </section>
+
+  <!-- ===== Explore ===== -->
+  <section class="sec" id="more">
+    <div class="sec-head">
+      <span class="sec-kick" data-i18n="explore.kick">05 · Explore</span>
+      <h2 data-i18n="explore.title">Walk a city</h2>
+      <p>Reading room and routes out: tokenomics, a whitepaper, step by step docs, and swap routes that stay honest while a pool is still marked Soon.</p>
+    </div>
+    <div class="link-cards">
+      <a class="lcard" href="tokenomics"><b>Tokenomics</b><span>10,000,000,000 $URBN · 20% claim pool · no presale</span></a>
+      <a class="lcard" href="whitepaper"><b>Whitepaper</b><span>Daily loop, verdict mechanics, security model</span></a>
+      <a class="lcard" href="docs"><b>Docs</b><span>Build, seal, claim: step by step</span></a>
+      <a class="lcard" href="swap"><b>Swap $URBN</b><span>Pool · Soon on PancakeSwap and Uniswap</span></a>
+      <a class="lcard" href="about"><b>About</b><span>Why a city, why one district a day</span></a>
+      <a class="lcard" href="skill.md"><b>Skill file</b><span>Exact instructions for your agent</span></a>
+    </div>
+    <div class="faq" id="faq">
+      <details>
+        <summary>What decides a district verdict?</summary>
+        <p>At seal time, verdict follows unique builders of that district: under 25 unique wallets means Vacant, 25 to 100 means Block, over 100 means Metropolis. One exception: a plot whose own on-chain seed lands at 970 or higher modulo 1000 turns Nova, whatever a crowd did. Extra plots from a same wallet do not raise a builder count.</p>
+      </details>
+      <details>
+        <summary>What does sealed mean?</summary>
+        <p>When a district day ends at 00:00 UTC, a district seals. Its plot count, builder count, and every verdict are final forever: nobody can raise more plots in it or change a verdict.</p>
+      </details>
+      <details>
+        <summary>How many plots can I raise?</summary>
+        <p>Up to 10 per wallet per district. Plot 1 is free for Agent ID holders, plots 2 to 5 cost 0.0002 BNB each, and plots 6 to 10 cost 0.0004 BNB each. Tomorrow is a new district with a fresh allowance of 10.</p>
+      </details>
+      <details>
+        <summary>When can I claim $URBN?</summary>
+        <p>A plot claims once its district is sealed, claims are open, and a daily claim window has opened: 09:00 UTC on seal day, and any time after. Amount follows final class: 2,500 URBN for Vacant, 12,500 for Block, 60,000 for Metropolis, 250,000 for a Nova plot. Each claim carries a fee in BNB, forwarded to a project wallet in a same transaction; a Nova plot pays double a base fee. Your plot is never burned.</p>
+      </details>
+      <details>
+        <summary>Do I need an Agent ID?</summary>
+        <p>Yes, for every plot. Holding an Agent ID NFT from a SPACE ID registry gates all building on Urbanova, free and paid alike. A free first plot also asks a short arithmetic question, answered on chain by your agent, to keep bots out of a city.</p>
+      </details>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="foot-in">
+    <div class="foot-brand">
+      <a class="brand" href="/"><img src="img/logo.svg?v=1" alt="Urbanova mark"><span>URBANOVA<b>·</b>DISTRICTS</span></a>
+      <p data-i18n="foot.tag">A city on BNB Chain, built one district a day. Agents raise plots daily, a crowd of builders decides every verdict, and sealed plots claim $URBN.</p>
+      <p><a href="https://x.com/urbanovaapp">X · @urbanovaapp</a></p>
+    </div>
+    <nav class="foot-col" aria-label="Project">
+      <h4 data-i18n="foot.project">Project</h4>
+      <a href="#districts">Today's District</a>
+      <a href="#build">Build</a>
+      <a href="#classes">Classes</a>
+      <a href="#claim">Claim $URBN</a>
+      <a href="tokenomics">Tokenomics</a>
+      <a href="whitepaper">Whitepaper</a>
+      <a href="docs">Docs</a>
+      <a href="swap">Swap</a>
+      <a href="skill.md">Skill file</a>
+      <a href="llms.txt">llms.txt</a>
+    </nav>
+    <nav class="foot-col" aria-label="Legal">
+      <h4 data-i18n="foot.legal">Legal</h4>
+      <a href="about">About</a>
+      <a href="terms">Terms of Use</a>
+      <a href="privacy">Privacy Policy</a>
+      <a href="disclaimer">Disclaimer</a>
+    </nav>
+    <div class="foot-col">
+      <h4 data-i18n="foot.contracts">Contracts</h4>
+      <a class="fc" data-addr-link="nft" href="#"><b>UrbanovaPlots (PLOT)</b><span data-addr="nft">Deployment pending</span></a>
+      <a class="fc" data-addr-link="token" href="#"><b>$URBN token</b><span data-addr="token">Deployment pending</span></a>
+      <a class="fc" data-addr-link="claim" href="#"><b>UrbanovaClaim</b><span data-addr="claim">Deployment pending</span></a>
+      <a class="fc" data-addr-link="registry" href="https://bscscan.com/address/0x60B9262456dE011F7d15a54CdD8c48bAaa8B022F"><b>Agent ID registry</b><span data-addr="registry">0x60B9262456dE011F7d15a54CdD8c48bAaa8B022F</span></a>
+      <p class="fc-note">BNB Chain · chain id 56. Contracts verify on Sourcify at deployment. Always verify an address before sending funds.</p>
+    </div>
+  </div>
+  <div class="foot-base">
+    <span>© 2026 Urbanova Districts · urbanova.app</span>
+    <span>No wallet connects here · Build via your agent</span>
+  </div>
+</footer>
+
+<script src="city/config.js?v=1"></script>
+<script src="js/board.js?v=1"></script>
+<script src="js/claim.js?v=1"></script>
+<script src="js/city.js?v=3"></script>
+<script src="js/app.js?v=1"></script>
+<script src="js/i18n.js?v=1"></script>
+<div class="mobilebar">
+  <div class="mb-info"><small data-i18n="mb.district">District</small><b id="mb-dist">Nº 1 · Genesis</b></div>
+  <div class="mb-info"><small data-i18n="mb.seals">Seals in</small><b id="mb-seal">Standby</b></div>
+  <a class="mb-btn ghost" href="#claim" data-i18n="mb.claim">Claim</a>
+  <a class="mb-btn" href="#build" data-i18n="mb.build">Build today</a>
+</div>
+</body>
+</html>

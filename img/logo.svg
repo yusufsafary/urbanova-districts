@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <rect x="4" y="4" width="232" height="232" rx="52" fill="#2a1d15"/>
+  <rect x="4" y="4" width="232" height="232" rx="52" fill="none" stroke="#f4a66e" stroke-width="3" stroke-dasharray="7 6" opacity="0.85"/>
+  <!-- isometric city plate: three rising blocks, tallest at back center with nova star -->
+  <g stroke="#2a1d15" stroke-width="3" stroke-linejoin="round">
+    <!-- back tall tower -->
+    <polygon points="120,44 148,60 120,76 92,60" fill="#f7c489"/>
+    <polygon points="92,60 120,76 120,138 92,122" fill="#e58a4e"/>
+    <polygon points="148,60 120,76 120,138 148,122" fill="#c96d34"/>
+    <!-- left mid block -->
+    <polygon points="76,96 100,110 76,124 52,110" fill="#f4a66e"/>
+    <polygon points="52,110 76,124 76,168 52,154" fill="#d97e3f"/>
+    <polygon points="100,110 76,124 76,168 100,154" fill="#b85f27"/>
+    <!-- right mid block -->
+    <polygon points="164,96 188,110 164,124 140,110" fill="#f4a66e"/>
+    <polygon points="140,110 164,124 164,168 140,154" fill="#d97e3f"/>
+    <polygon points="188,110 164,124 164,168 188,154" fill="#b85f27"/>
+    <!-- front low block -->
+    <polygon points="120,128 146,143 120,158 94,143" fill="#f7c489"/>
+    <polygon points="94,143 120,158 120,186 94,171" fill="#e58a4e"/>
+    <polygon points="146,143 120,158 120,186 146,171" fill="#c96d34"/>
+  </g>
+  <!-- nova star above tower -->
+  <path d="M120 8 L126 26 L144 32 L126 38 L120 56 L114 38 L96 32 L114 26 Z" fill="#fbf3e8"/>
+  <!-- lit windows -->
+  <g fill="#fbf3e8" opacity="0.9">
+    <rect x="112" y="88" width="6" height="8"/>
+    <rect x="112" y="106" width="6" height="8"/>
+    <rect x="66" y="128" width="5" height="7"/>
+    <rect x="156" y="128" width="5" height="7"/>
+    <rect x="114" y="164" width="5" height="7"/>
+  </g>
+</svg>

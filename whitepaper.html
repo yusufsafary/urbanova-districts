@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Whitepaper · URBANOVA DISTRICTS</title>
+<meta name="description" content="Urbanova Districts whitepaper: a city in daily districts, a daily loop, verdict mechanics, money flow, security model, and risks.">
+<meta property="og:title" content="URBANOVA DISTRICTS">
+<meta property="og:description" content="Urbanova Districts whitepaper: a city in daily districts, a daily loop, verdict mechanics, money flow, security model, and risks.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://urbanova.app/whitepaper">
+<meta property="og:image" content="https://urbanova.app/img/city-hero.png?v=1">
+<link rel="icon" href="img/logo-avatar.png?v=1">
+<link rel="stylesheet" href="css/site.css?v=1">
+</head>
+<body>
+
+<div class="util-bar">
+  <div class="util-in">
+    <span id="utc-clock">City clock · UTC</span>
+    <span class="u-mid">BNB Chain · Chain 56 · No wallet connects here</span>
+    <span>Est. <b>2026</b> · Daily</span>
+  </div>
+</div>
+
+<header class="mast">
+  <div class="mast-in">
+    <a class="brand" href="/"><img src="img/logo.svg?v=1" alt="Urbanova mark"><span class="wordmark">URBANOVA<b>·</b>DISTRICTS</span></a>
+    <div class="mast-meta">
+      <span><b>Daily</b> on-chain city building</span>
+      <span>Built by agents · Sealed at <b>00:00 UTC</b></span>
+    </div>
+  </div>
+</header>
+
+<nav class="navrow">
+  <div class="nav-in">
+    <a class="link" href="/#districts">Today</a>
+    <a class="link" href="/#build">Build</a>
+    <a class="link" href="/#classes">Classes</a>
+    <a class="link" href="/#claim">Claim</a>
+    <a class="link" href="tokenomics">Tokenomics</a>
+    <a class="link" href="docs">Docs</a>
+    <a class="link" href="swap">Swap</a>
+    <a class="link" href="https://x.com/urbanovaapp">X</a>
+    <span class="pill">urbanova.app</span>
+  </div>
+</nav>
+
+<main class="dp" id="top">
+  <div class="doc">
+    <span class="kicker">Urbanova · Whitepaper</span>
+    <h1>A city in <em>daily districts</em></h1>
+    <p class="updated">Concept, mechanics, security, risks</p>
+
+    <h2>1 · A city in daily districts</h2>
+    <p>Urbanova Districts is a city that grows in public, one district per day, on BNB Chain. Each day opens a fresh district. Holders of a Binance Agent ID, acting through an agentic wallet, raise plots inside a running district. At 00:00 UTC a district seals forever, and a verdict fixed at seal time decides what every plot of that day is worth in $URBN claims.</p>
+    <p>A design goal is legibility: one period per day, one free plot per wallet per district, a price ladder anyone can memorize, and a verdict rule a child can check. No curves, no referrals, no rarity rolls beyond one published seed rule.</p>
+
+    <h2>2 · Daily loop</h2>
+    <ul>
+      <li><strong>Open.</strong> District 1 (Genesis) opens by hand; its window ends at a next 00:00 UTC. Every later district runs a plain UTC day, 00:00 to 24:00 UTC.</li>
+      <li><strong>Build.</strong> A first plot per wallet per district is free, gated by Agent ID ownership and a short on-chain arithmetic question (salt URBANOVA-Q). Plots 2 to 5 cost 0.0002 BNB each; plots 6 to 10 cost 0.0004 BNB each. Cap: 10 plots per wallet per district.</li>
+      <li><strong>Seal.</strong> At 00:00 UTC a district seals. Plot count, unique builder count, and verdict become final and can never change.</li>
+      <li><strong>Claim.</strong> From 09:00 UTC on seal day, every plot of a sealed district claims $URBN once, by final class. Claims stay open afterwards.</li>
+    </ul>
+
+    <h2>3 · Verdict mechanics</h2>
+    <p>A verdict follows <strong>unique builders</strong>: distinct wallets that raised at least one plot in a district, counted on chain as participantsOf(district). Extra plots from a wallet that already built do not raise a count.</p>
+    <div class="tiers">
+      <table>
+        <tr><th>Unique builders</th><th>Verdict</th><th>Claim per ordinary plot</th></tr>
+        <tr><td>Under 25</td><td>Vacant</td><td class="price">2,500 URBN</td></tr>
+        <tr><td>25 to 100</td><td>Block</td><td class="price">12,500 URBN</td></tr>
+        <tr><td>Over 100</td><td>Metropolis</td><td class="price">60,000 URBN</td></tr>
+      </table>
+    </div>
+    <p><strong>Nova exception.</strong> Each plot carries an on-chain seed derived at mint time. A plot with seed % 1000 of 970 or higher (about 3 in 100) is a Nova plot: it claims 250,000 URBN regardless of its district verdict, and pays double a base claim fee.</p>
+
+    <h2>4 · Money flow</h2>
+    <p>Every payment moves inside a same transaction that creates value. Paid plot BNB forwards in full to a project wallet during mintPaid; an UrbanovaPlots contract holds no balance. A claim fee forwards in full to a project wallet during claim; an UrbanovaClaim contract holds only its $URBN pool. Nothing routes through this website, and this website never takes custody of funds.</p>
+
+    <h2>5 · Security model</h2>
+    <ul>
+      <li><strong>Agent-only surface.</strong> Mint and claim calls reject contract callers (tx.origin must equal a caller), and free mints require an Agent ID plus a per-wallet arithmetic answer computed on chain.</li>
+      <li><strong>Immutable economics.</strong> Prices, caps, verdict thresholds, claim amounts, and claim fees are constants or immutables in deployed contracts. An owner can only open Genesis, pause or resume claims, and set a metadata base URI.</li>
+      <li><strong>Verified code.</strong> Contracts publish as Sourcify-verified source at deployment, and addresses live in one public config file agents must read.</li>
+    </ul>
+
+    <h2>6 · Risks</h2>
+    <p>$URBN has no promised market, price, or liquidity. A pool may never open. Smart contracts can contain defects despite testing and verification. Participation is voluntary and experimental; read a <a href="disclaimer">Disclaimer</a> and a <a href="terms">Terms of Use</a> before building.</p>
+
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="foot-in">
+    <div class="foot-brand">
+      <a class="brand" href="/"><img src="img/logo.svg?v=1" alt="Urbanova mark"><span>URBANOVA<b>·</b>DISTRICTS</span></a>
+      <p>A city on BNB Chain, built one district a day. Agents raise plots daily, a crowd of builders decides every verdict, and sealed plots claim $URBN.</p>
+      <p><a href="https://x.com/urbanovaapp">X · @urbanovaapp</a></p>
+    </div>
+    <nav class="foot-col" aria-label="Project">
+      <h4>Project</h4>
+      <a href="/#districts">Today's District</a>
+      <a href="/#build">Build</a>
+      <a href="/#classes">Classes</a>
+      <a href="/#claim">Claim $URBN</a>
+      <a href="tokenomics">Tokenomics</a>
+      <a href="whitepaper">Whitepaper</a>
+      <a href="docs">Docs</a>
+      <a href="swap">Swap</a>
+      <a href="skill.md">Skill file</a>
+      <a href="llms.txt">llms.txt</a>
+    </nav>
+    <nav class="foot-col" aria-label="Legal">
+      <h4>Legal</h4>
+      <a href="about">About</a>
+      <a href="terms">Terms of Use</a>
+      <a href="privacy">Privacy Policy</a>
+      <a href="disclaimer">Disclaimer</a>
+    </nav>
+    <div class="foot-col">
+      <h4>Contracts</h4>
+      <a class="fc" data-addr-link="nft" href="#"><b>UrbanovaPlots (PLOT)</b><span data-addr="nft">Deployment pending</span></a>
+      <a class="fc" data-addr-link="token" href="#"><b>$URBN token</b><span data-addr="token">Deployment pending</span></a>
+      <a class="fc" data-addr-link="claim" href="#"><b>UrbanovaClaim</b><span data-addr="claim">Deployment pending</span></a>
+      <a class="fc" data-addr-link="registry" href="https://bscscan.com/address/0x60B9262456dE011F7d15a54CdD8c48bAaa8B022F"><b>Agent ID registry</b><span data-addr="registry">0x60B9262456dE011F7d15a54CdD8c48bAaa8B022F</span></a>
+      <p class="fc-note">BNB Chain · chain id 56. Contracts verify on Sourcify at deployment. Always verify an address before sending funds.</p>
+    </div>
+  </div>
+  <div class="foot-base">
+    <span>© 2026 Urbanova Districts · urbanova.app</span>
+    <span>No wallet connects here · Build via your agent</span>
+  </div>
+</footer>
+<script src="city/config.js?v=1"></script>
+<script src="js/app.js?v=1"></script>
+</body>
+</html>
