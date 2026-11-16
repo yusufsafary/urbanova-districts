@@ -11,6 +11,8 @@
   var ctx = canvas.getContext("2d");
   var W = 1160, H = 740;
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var highlightN = null, selectedN = null, lastTiles = [];
+  var growth = { t0: -1, delta: 0 };
 
   var COLS = 6, ROWS = 4, TILES = COLS * ROWS;
   var TW = 176, TH = 88;              // tile diamond size
@@ -90,6 +92,26 @@
       var gold = info.verdict === 3 && i === 3;
       box(bx, by, 0.34, 0.34, h, gold ? GTOP : TOP, gold ? GLEFT : LEFT, gold ? GRIGHT : RIGHT, info.kind === "sealed", rand);
     }
+    if (info.kind === "running" && growth.t0 > 0) {
+      var gp = (t - growth.t0) / 1150;
+      if (gp >= 0 && gp <= 1) {
+        var ge = 1 - Math.pow(1 - gp, 3);
+        var gh = Math.max(2, base * scale * 1.2 * ge);
+        box(cx + 0.58 * TW * 0.82, cy + 0.46 * TH * 0.82, 0.34, 0.34, gh, GTOP, GLEFT, GRIGHT, true, rand);
+      }
+    }
+    if (info.n === selectedN || info.n === highlightN) {
+      ctx.beginPath();
+      ctx.moveTo(p[0][0], p[0][1]); ctx.lineTo(p[1][0], p[1][1]); ctx.lineTo(p[2][0], p[2][1]); ctx.lineTo(p[3][0], p[3][1]);
+      ctx.closePath();
+      if (info.n === selectedN) {
+        ctx.fillStyle = "rgba(244,166,110,.16)"; ctx.fill();
+        ctx.strokeStyle = "#c96d34"; ctx.lineWidth = 3;
+      } else {
+        ctx.strokeStyle = "rgba(42,29,21,.55)"; ctx.lineWidth = 2;
+      }
+      ctx.stroke();
+    }
     if (info.kind === "running") {
       var pulse = 0.5 + 0.5 * Math.sin(t / 620);
       ctx.save();
@@ -136,6 +158,7 @@
     // paper frame
     ctx.strokeStyle = "#d8bd8f"; ctx.lineWidth = 2; ctx.strokeRect(14, 14, W - 28, H - 28);
     var tiles = state();
+    lastTiles = tiles;
     // draw back to front: row+col ascending
     var cellsPos = tiles.map(function (tl, i) { return { tl: tl, col: i % COLS, row: Math.floor(i / COLS) }; });
     var ordered = cellsPos.slice().sort(function (a, b) { return (a.row + a.col) - (b.row + b.col); });
@@ -177,6 +200,38 @@
       ctx.strokeStyle = INK; ctx.lineWidth = 1.4; ctx.stroke();
     }
   }
+
+  /* Interaction API for explore.js: hit testing in canvas coords,
+     hover/selected highlight, tile centers, growth moments. */
+  window.URBANOVA_CITY_API = {
+    tiles: function () {
+      return lastTiles.map(function (tl, i) { return { n: tl.n, kind: tl.kind, plots: tl.plots || 0, verdict: tl.verdict || 0, col: i % COLS, row: Math.floor(i / COLS) }; });
+    },
+    pick: function (x, y) {
+      var u = (x - OX) / (TW / 2), v = (y - OY) / (TH / 2);
+      var gx = (u + v) / 2, gy = (v - u) / 2;
+      var col = Math.floor(gx), row = Math.floor(gy);
+      if (col < 0 || row < 0 || col >= COLS || row >= ROWS) return null;
+      var tl = lastTiles[row * COLS + col];
+      if (!tl) return null;
+      return { n: tl.n, kind: tl.kind, col: col, row: row };
+    },
+    center: function (n) {
+      for (var i = 0; i < lastTiles.length; i++) {
+        if (lastTiles[i].n === n) {
+          var o = tileOrigin(i % COLS, Math.floor(i / COLS));
+          return { x: o[0], y: o[1] + TH / 2 };
+        }
+      }
+      return null;
+    },
+    setHighlight: function (n) { highlightN = n; if (reduce) draw(1200); },
+    setSelected: function (n) { selectedN = n; if (reduce) draw(1200); },
+    grow: function (delta) {
+      growth = { t0: performance.now(), delta: delta };
+      try { window.dispatchEvent(new CustomEvent("urbanova:plot-growth", { detail: { delta: delta } })); } catch (e) { /* older browser */ }
+    }
+  };
 
   var running = false, visible = true;
   function loop(t) {

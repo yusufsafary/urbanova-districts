@@ -95,7 +95,7 @@
     var needle = $("g-needle"); if (needle) needle.style.left = pct + "%";
     setText("g-part", fmt(builders));
     setText("f-proj", "Projected verdict · " + verdictOf(builders));
-    setText("stage-verdict", "Verdict · " + verdictOf(builders));
+    setText("stage-verdict", verdictOf(builders));
     setText("f-note", builders > 100
       ? fmt(builders) + " unique builders. Past 100 a district stands as Metropolis, and extra builders deepen its claim day crowd."
       : fmt(builders) + " unique builders so far. " + (builders < 25
@@ -130,10 +130,11 @@
   function genesisMode(total) {
     sealTs = 0;
     window.URBANOVA_CITY_STATE = { sealed: [], running: { n: 1, plots: 0, builders: 0 } };
+    window.URBANOVA_BOARD_STATE = { sealed: [], running: { n: 1, plots: 0, builders: 0 }, sealTs: 0, genesis: false };
     setText("h-status", "Genesis not yet open");
     setText("b-dist", "N\u00ba 1 \u00b7 Genesis");
     setText("mb-dist", "N\u00ba 1 \u00b7 Genesis");
-    setText("stage-dist", "District Nº 1");
+    setText("stage-dist", "Nº 1");
     setNum("b-plots", 0); setNum("b-builders", 0);
     setText("b-seal", "Not opened");
     setText("b-status", "Standby");
@@ -141,7 +142,7 @@
     setText("b-note", "Genesis has not opened yet. District Nº 1 opens by hand, and its window runs to the next 00:00 UTC. Every later district runs a plain UTC day, then seals for good.");
     applyVerdict(0);
     setText("f-proj", "Projected verdict \u00b7 Awaiting first district");
-    setText("stage-verdict", "Verdict \u00b7 Pending");
+    setText("stage-verdict", "Pending");
     setText("f-note", "Verdict follows unique builders on a day: under 25 stays Vacant, 25 to 100 stands as Block, over 100 rises as Metropolis.");
     if (typeof total === "number" && total > 0) setNum("g-total", total);
   }
@@ -150,7 +151,7 @@
     var now = Math.floor(Date.now() / 1000);
     setText("b-dist", "N\u00ba " + fmt(dist));
     setText("mb-dist", "N\u00ba " + fmt(dist) + " \u00b7 Building");
-    setText("stage-dist", "District Nº " + fmt(dist));
+    setText("stage-dist", "Nº " + fmt(dist));
     setNum("b-plots", plots);
     setNum("b-builders", builders);
     setNum("g-total", total);
@@ -166,6 +167,10 @@
       setText("h-status", "Sealed"); setText("b-status", "Sealed");
       setText("b-note", "District Nº " + fmt(dist) + " is sealed for good. A fresh district starts at 00:00 UTC. Claims for a sealed district open at 09:00 UTC on its seal day.");
     }
+    var bs = window.URBANOVA_BOARD_STATE || { sealed: [] };
+    bs.running = { n: dist, plots: plots, builders: builders };
+    bs.sealTs = sealTs; bs.genesis = true;
+    window.URBANOVA_BOARD_STATE = bs;
     // ledger: sealed unclaimed = total - running plots - claimed
     setNum("g-unclaimed", Math.max(0, total - plots - claimed));
     setNum("g-claimed", claimed);
@@ -185,7 +190,7 @@
         '<span class="arch-verdict ' + vcls + '">' + VERDICTS[c.verdict] + '</span></div>' +
         '<div class="arch-nums"><div><b>' + fmt(c.plots) + '</b><span>Plots</span></div>' +
         '<div><b>' + fmt(c.builders) + '</b><span>Builders</span></div>' +
-        '<div><b>' + claim + '</b><span>$URBN per plot</span></div></div></article>';
+        '<div><b>' + claim + '</b><span>$URBN per plot</span></div></div><span class="arch-open">DISTRICT FILE \u00b7 TAP TO OPEN</span></article>';
     }).join("");
   }
 
@@ -200,7 +205,11 @@
       var genesis = wordToInt(r[1]) === 1;
       var dist = wordToInt(r[2]);
       var total = wordToInt(r[3]);
-      if (!genesis || dist < 1) { genesisMode(total); renderArchive([]); return; }
+      if (!genesis || dist < 1) { genesisMode(total); renderArchive([]); prevTotal = total; return; }
+      if (prevTotal !== null && total > prevTotal && window.URBANOVA_CITY_API) {
+        window.URBANOVA_CITY_API.grow(total - prevTotal);
+      }
+      prevTotal = total;
       rpcBatch(NFT, [
         { id: 1, data: SEL.plotsInDistrict + padArg(dist) },
         { id: 2, data: SEL.participantsOf + padArg(dist) },
@@ -215,6 +224,7 @@
         for (var n = first; n < dist; n++) sealedNs.push(n);
         if (!sealedNs.length) {
           window.URBANOVA_CITY_STATE = { sealed: [], running: { n: dist, plots: plots, builders: builders } };
+          var bs0 = window.URBANOVA_BOARD_STATE || {}; bs0.sealed = []; window.URBANOVA_BOARD_STATE = bs0;
           renderArchive([]);
           return;
         }
@@ -230,6 +240,7 @@
             return { n: n, plots: wordToInt(r3[10 + i * 3]), builders: wordToInt(r3[11 + i * 3]), verdict: wordToInt(r3[12 + i * 3]) };
           });
           window.URBANOVA_CITY_STATE = { sealed: sealed, running: { n: dist, plots: plots, builders: builders } };
+          var bs1 = window.URBANOVA_BOARD_STATE || {}; bs1.sealed = sealed; window.URBANOVA_BOARD_STATE = bs1;
           renderArchive(sealed.slice(-3).reverse());
         });
       });
@@ -252,6 +263,7 @@
       : "Claims are not open yet. Plots of sealed districts become claimable once claims open, at 09:00 UTC on each seal day. Watch this board.");
   }
   var lastClaimed = 0;
+  var prevTotal = null;
   function raceClaim() {
     if (!isAddr(CLAIM)) {
       setText("c-status", "SOON");

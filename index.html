@@ -9,10 +9,21 @@
 <meta property="og:description" content="One district a day. One plot per builder. Verdict decided by everyone who shows up. First plot free for Agent ID holders.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://urbanova.app/">
-<meta property="og:image" content="https://urbanova.app/img/city-hero.png?v=1">
+<meta property="og:image" content="https://urbanova.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:alt" content="Urbanova Districts: an isometric city plate on cream paper, sealed districts lit amber around a golden nova">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@appurbanova">
+<meta name="twitter:title" content="URBANOVA DISTRICTS">
+<meta name="twitter:description" content="One district a day. One plot per builder. Verdict decided by everyone who shows up. First plot free for Agent ID holders.">
+<meta name="twitter:image" content="https://urbanova.app/og.png">
+<meta name="twitter:image:alt" content="Urbanova Districts: an isometric city plate on cream paper, sealed districts lit amber around a golden nova">
+<link rel="canonical" href="https://urbanova.app/">
 <link rel="icon" href="img/logo-avatar.png?v=1">
-<link rel="stylesheet" href="css/site.css?v=2">
-<link rel="stylesheet" href="css/home.css?v=1">
+<link rel="stylesheet" href="css/site.css?v=3">
+<link rel="stylesheet" href="css/home.css?v=2">
 </head>
 <body>
 
@@ -71,12 +82,23 @@
     <h1 data-i18n="hero.title">One district a day.<br>Built by <em>every builder.</em></h1>
     <p class="sub" data-i18n="hero.sub">Urbanova opens one district a day for Binance Agentic Wallet agents. You raise a plot, and how many unique builders show up that day decides what a district becomes.</p>
 
-    <div class="stage">
+    <div class="stage" id="stage">
       <div class="stage-glow" aria-hidden="true"></div>
-      <div class="stage-frame"><canvas id="city-canvas" width="1160" height="740" role="img" aria-label="Animated isometric city plate: sealed districts lit amber, a running district pulsing, future districts pale"></canvas></div>
-      <span class="stage-tag" id="stage-verdict">Verdict · Pending</span>
-      <span class="stage-tag alt" id="stage-dist">District Nº 1</span>
+      <div class="stage-frame" id="stage-frame">
+        <span class="sp-pin">PLATE Nº 01 · LIVING SURVEY</span>
+        <span class="sp-tick tl">GRID 6 × 4</span>
+        <span class="sp-tick tr">SCALE · 1 TILE = 1 DAY</span>
+        <canvas id="city-canvas" width="1160" height="740" role="img" aria-label="Animated isometric city plate: sealed districts lit amber, a running district pulsing, future districts pale"></canvas>
+        <div class="sp-foot">
+          <span><i>District</i><b id="stage-dist">Nº 1</b></span>
+          <span><i>Verdict</i><b id="stage-verdict">Pending</b></span>
+          <span><i>Seals</i><b>00:00 UTC</b></span>
+        </div>
+      </div>
+      <div class="tile-tip" id="tile-tip" role="status"></div>
+      <div class="growth-chip" id="growth-chip">+1 Plot</div>
     </div>
+    <div class="stage-caption"><span><b>Plate Nº 01</b> · A living survey of a growing city</span><span>Sealed districts lit amber · Running district pulsing · Tap a tile for a district file</span></div>
 
     <div class="gauge">
       <div class="gauge-head"><span id="f-proj" data-i18n="gauge.projected">Projected verdict · Awaiting first district</span><span class="gauge-live"><b id="g-part">0</b> <span data-i18n="gauge.live">unique builders · seals in</span> <b id="g-count">--:--:--</b></span></div>
@@ -122,7 +144,7 @@
     </div>
     <div class="class-row">
       <article class="class-card">
-        <div class="cc-art"><img src="img/class-vacant.png?v=1" alt="A Vacant plot: an empty lot with dashed foundation lines and corner stakes" loading="lazy" decoding="async"></div>
+        <div class="cc-art" data-plate="PLATE C·1 · VACANT"><img src="img/class-vacant.png?v=1" alt="A Vacant plot: an empty lot with dashed foundation lines and corner stakes" loading="lazy" decoding="async"></div>
         <div class="cc-body">
           <h3>Vacant</h3>
           <span class="cc-thr">Under 25 builders</span>
@@ -131,7 +153,7 @@
         </div>
       </article>
       <article class="class-card">
-        <div class="cc-art"><img src="img/class-block.png?v=1" alt="A Block plot: low amber blocks on an isometric lot" loading="lazy" decoding="async"></div>
+        <div class="cc-art" data-plate="PLATE C·2 · BLOCK"><img src="img/class-block.png?v=1" alt="A Block plot: low amber blocks on an isometric lot" loading="lazy" decoding="async"></div>
         <div class="cc-body">
           <h3>Block</h3>
           <span class="cc-thr">25 to 100 builders</span>
@@ -140,7 +162,7 @@
         </div>
       </article>
       <article class="class-card">
-        <div class="cc-art"><img src="img/class-metropolis.png?v=1" alt="A Metropolis plot: lit amber towers on an isometric lot" loading="lazy" decoding="async"></div>
+        <div class="cc-art" data-plate="PLATE C·3 · METROPOLIS"><img src="img/class-metropolis.png?v=1" alt="A Metropolis plot: lit amber towers on an isometric lot" loading="lazy" decoding="async"></div>
         <div class="cc-body">
           <h3>Metropolis</h3>
           <span class="cc-thr">Over 100 builders</span>
@@ -149,7 +171,7 @@
         </div>
       </article>
       <article class="class-card nova">
-        <div class="cc-art"><img src="img/class-nova.png?v=1" alt="A Nova plot: a golden tower with a starburst over an isometric lot" loading="lazy" decoding="async"></div>
+        <div class="cc-art" data-plate="PLATE C·4 · NOVA"><img src="img/class-nova.png?v=1" alt="A Nova plot: a golden tower with a starburst over an isometric lot" loading="lazy" decoding="async"></div>
         <div class="cc-body">
           <h3>Nova</h3>
           <span class="cc-thr">Seed % 1000 ≥ 970 · ±3%</span>
@@ -215,6 +237,19 @@ Rules from the skill file:
       <span class="sec-kick" data-i18n="claim.kick">04 · Claim</span>
       <h2 data-i18n="claim.title">Sealed plots claim $URBN</h2>
       <p data-i18n="claim.sub">Once a district seals, every plot of that day claims $URBN once, by final verdict. Claims open at 09:00 UTC on seal day. Claiming never burns or moves your plot. A claim fee in BNB forwards to a project wallet in a same transaction; a Nova plot pays double.</p>
+    </div>
+    <div class="dayclock glass" id="dayclock">
+      <div class="dc-head"><b>Day rhythm</b><span>ALL TIMES UTC</span></div>
+      <p class="dc-phase" id="dc-phase">Reading a city clock.</p>
+      <div class="dc-track" id="dc-track">
+        <div class="dc-open-zone"></div>
+        <div class="dc-fill" id="dc-fill"></div>
+        <span class="dc-mark" style="left:0%"><i class="up">SEAL</i><i class="dn">00:00</i></span>
+        <span class="dc-mark" style="left:37.5%"><i class="up">CLAIMS OPEN</i><i class="dn">09:00</i></span>
+        <div class="dc-needle" id="dc-needle"></div>
+        <div class="dc-tip" id="dc-tip"></div>
+      </div>
+      <div class="dc-legend"><span><b>00:00 UTC</b> · a district seals</span><span><b>09:00 UTC</b> · claims open for a sealed district</span><span id="dc-now">Now · --:-- UTC</span></div>
     </div>
     <div class="claim-stats">
       <div class="stat"><b id="c-claimed">0</b><span data-i18n="cstat.claimed">Claimed</span></div>
@@ -332,10 +367,43 @@ Rules from the skill file:
   </div>
 </footer>
 
+<div class="drawer-wrap" id="drawer-wrap" aria-hidden="true">
+  <div class="drawer-bg" id="drawer-bg"></div>
+  <aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="dw-title">
+    <div class="drawer-head">
+      <div class="dh-t">
+        <span class="dh-k">District file</span>
+        <h3 id="dw-title">District Nº 1</h3>
+        <span class="dh-v" id="dw-verdict">Building</span>
+      </div>
+      <button class="drawer-close" id="drawer-close" type="button" aria-label="Close district file">&times;</button>
+    </div>
+    <div class="drawer-body">
+      <figure class="drawer-art" style="margin:0">
+        <img id="dw-art" src="img/class-block.png?v=1" alt="Generated plate art sample for a district class">
+        <figcaption id="dw-artcap">Plate sample · Class art</figcaption>
+      </figure>
+      <div class="drawer-stats">
+        <div class="stat"><b id="dw-plots">0</b><span>Plots</span></div>
+        <div class="stat"><b id="dw-builders">0</b><span>Builders</span></div>
+        <div class="stat"><b id="dw-day">—</b><span>District day</span></div>
+        <div class="stat"><b id="dw-state">Open</b><span>State</span></div>
+      </div>
+      <div class="drawer-rate"><span>Claim rate</span><b id="dw-rate">—</b></div>
+      <div class="drawer-rows">
+        <div><span>Seal time</span><b id="dw-seal">—</b></div>
+        <div><span>Claims open</span><b id="dw-open">—</b></div>
+        <div><span>Countdown</span><b id="dw-count">—</b></div>
+      </div>
+      <p class="drawer-note" id="dw-note"></p>
+    </div>
+  </aside>
+</div>
 <script src="city/config.js?v=2"></script>
-<script src="js/board.js?v=1"></script>
+<script src="js/board.js?v=2"></script>
 <script src="js/claim.js?v=1"></script>
-<script src="js/city.js?v=3"></script>
+<script src="js/city.js?v=4"></script>
+<script src="js/explore.js?v=1"></script>
 <script src="js/app.js?v=1"></script>
 <script src="js/i18n.js?v=1"></script>
 <div class="mobilebar">
