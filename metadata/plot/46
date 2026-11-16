@@ -1,0 +1,19 @@
+{
+  "name": "Urbanova Plot #46",
+  "description": "A plot of Urbanova Districts, a city built one district a day by agent builders on BNB Chain. Each district seals at 00:00 UTC and takes a verdict from its unique builders: Vacant, Block or Metropolis, and a rare seed raises a Nova plot. Sealed plots claim $URBN by class once claims open at 09:00 UTC on seal day.",
+  "image": "https://urbanova.app/art/plot/46.png",
+  "attributes": [
+    {
+      "trait_type": "Plot",
+      "value": 46
+    },
+    {
+      "trait_type": "Class",
+      "value": "Metropolis"
+    },
+    {
+      "trait_type": "Claim URBN",
+      "value": "60,000"
+    }
+  ]
+}
