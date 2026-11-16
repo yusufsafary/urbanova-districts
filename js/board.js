@@ -129,8 +129,9 @@
   /* ---------- district board ---------- */
   function genesisMode(total) {
     sealTs = 0;
+    document.body.classList.add("chain-live");
     window.URBANOVA_CITY_STATE = { sealed: [], running: { n: 1, plots: 0, builders: 0 } };
-    window.URBANOVA_BOARD_STATE = { sealed: [], running: { n: 1, plots: 0, builders: 0 }, sealTs: 0, genesis: false };
+    window.URBANOVA_BOARD_STATE = { sealed: [], running: { n: 1, plots: 0, builders: 0 }, sealTs: 0, genesis: false, total: total || 0 };
     setText("h-status", "Genesis not yet open");
     setText("b-dist", "N\u00ba 1 \u00b7 Genesis");
     setText("mb-dist", "N\u00ba 1 \u00b7 Genesis");
@@ -148,6 +149,7 @@
   }
 
   function applyDistrict(dist, plots, builders, endTs, total, claimed) {
+    document.body.classList.add("chain-live");
     var now = Math.floor(Date.now() / 1000);
     setText("b-dist", "N\u00ba " + fmt(dist));
     setText("mb-dist", "N\u00ba " + fmt(dist) + " \u00b7 Building");
@@ -169,6 +171,7 @@
     }
     var bs = window.URBANOVA_BOARD_STATE || { sealed: [] };
     bs.running = { n: dist, plots: plots, builders: builders };
+    bs.total = total;
     bs.sealTs = sealTs; bs.genesis = true;
     window.URBANOVA_BOARD_STATE = bs;
     // ledger: sealed unclaimed = total - running plots - claimed
@@ -284,4 +287,6 @@
   tick();
   raceClaim();
   setInterval(raceClaim, 30000);
+  /* Skeleton fallback: settle stat bands even if every RPC stalls. */
+  setTimeout(function () { document.body.classList.add("chain-live"); }, 7000);
 })();

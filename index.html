@@ -22,8 +22,9 @@
 <meta name="twitter:image:alt" content="Urbanova Districts: an isometric city plate on cream paper, sealed districts lit amber around a golden nova">
 <link rel="canonical" href="https://urbanova.app/">
 <link rel="icon" href="img/logo-avatar.png?v=1">
-<link rel="stylesheet" href="css/site.css?v=4">
-<link rel="stylesheet" href="css/home.css?v=2">
+<link rel="preload" as="font" type="font/ttf" href="fonts/FunnelDisplay-800.ttf" crossorigin>
+<link rel="stylesheet" href="css/site.css?v=5">
+<link rel="stylesheet" href="css/home.css?v=3">
 </head>
 <body>
 
@@ -84,6 +85,7 @@
 
     <div class="stage" id="stage">
       <div class="stage-glow" aria-hidden="true"></div>
+      <div class="hero-glow" id="hero-glow" aria-hidden="true"></div>
       <div class="stage-frame" id="stage-frame">
         <span class="sp-pin">PLATE Nº 01 · LIVING SURVEY</span>
         <span class="sp-tick tl">GRID 6 × 4</span>
@@ -98,7 +100,12 @@
       <div class="tile-tip" id="tile-tip" role="status"></div>
       <div class="growth-chip" id="growth-chip">+1 Plot</div>
     </div>
-    <div class="stage-caption"><span><b>Plate Nº 01</b> · A living survey of a growing city</span><span>Sealed districts lit amber · Running district pulsing · Tap a tile for a district file</span></div>
+    <div class="stage-caption"><span><b>Plate Nº 01</b> · A living survey of a growing city</span><span>Sealed districts lit amber · Running district pulsing · Tap a tile for a district file</span><button class="fly-btn" id="fly-btn" type="button" aria-pressed="false">Fly over the city</button></div>
+
+    <div class="live-feed" id="live-feed" aria-label="Live city activity">
+      <span class="lf-tag"><i></i>Live</span>
+      <ul id="feed-list"><li class="lf-wait">Listening to a city…</li></ul>
+    </div>
 
     <div class="gauge">
       <div class="gauge-head"><span id="f-proj" data-i18n="gauge.projected">Projected verdict · Awaiting first district</span><span class="gauge-live"><b id="g-part">0</b> <span data-i18n="gauge.live">unique builders · seals in</span> <b id="g-count">--:--:--</b></span></div>
@@ -250,12 +257,35 @@ Rules from the skill file:
         <div class="dc-tip" id="dc-tip"></div>
       </div>
       <div class="dc-legend"><span><b>00:00 UTC</b> · a district seals</span><span><b>09:00 UTC</b> · claims open for a sealed district</span><span id="dc-now">Now · --:-- UTC</span></div>
+      <div class="dc-scrub">
+        <span class="dc-scrub-lab">Preview city light</span>
+        <input type="range" id="dc-slider" min="0" max="1439" step="5" value="720" aria-label="Preview a time of day in UTC">
+        <span class="dc-scrub-t" id="dc-scrub-t">Live clock</span>
+        <button class="dc-live-btn" id="dc-live" type="button" hidden>Back to live</button>
+      </div>
+      <p class="dc-hint">Drag to preview an hour. A plate at top of this page relights to match, and a rhythm needle follows, until you return to live.</p>
     </div>
     <div class="claim-stats">
       <div class="stat"><b id="c-claimed">0</b><span data-i18n="cstat.claimed">Claimed</span></div>
       <div class="stat"><b id="c-pool">0</b><span data-i18n="cstat.pool">Claim pool</span></div>
       <div class="stat"><b id="c-status">SOON</b><span data-i18n="cstat.status">Status</span></div>
       <div class="stat"><b id="c-open">--:--:--</b><span data-i18n="cstat.open">Next claim opening in</span></div>
+    </div>
+    <div class="claim-calc glass" id="claim-calc">
+      <div class="calc-head"><b>Claim calculator</b><span>Estimate a sealed haul</span></div>
+      <div class="cc-classes" role="group" aria-label="Verdict class">
+        <button type="button" class="cc-cls" data-cls="1" aria-pressed="false">Vacant</button>
+        <button type="button" class="cc-cls on" data-cls="2" aria-pressed="true">Block</button>
+        <button type="button" class="cc-cls" data-cls="3" aria-pressed="false">Metropolis</button>
+        <button type="button" class="cc-cls" data-cls="4" aria-pressed="false">Nova</button>
+      </div>
+      <div class="calc-row">
+        <input type="range" id="cc-range" min="1" max="10" step="1" value="3" aria-label="Sealed plots to claim">
+        <div class="calc-n"><span id="cc-n">3</span><small>plots</small></div>
+      </div>
+      <p class="calc-rows" id="cc-rows">3 plots × 12,500 $URBN · Block</p>
+      <div class="calc-out"><span>Total claim</span><b id="cc-total">37,500 $URBN</b></div>
+      <p class="calc-note" id="cc-note">A rate follows a final district verdict at seal time. Each claim also carries a fee in BNB, forwarded to a project wallet in a same transaction.</p>
     </div>
     <p class="board-note" id="c-note">Claims are not open yet. Plots of sealed districts become claimable once claims open, at 09:00 UTC on each seal day. Watch this board.</p>
     <div class="claim-panel glass">
@@ -400,11 +430,11 @@ Rules from the skill file:
   </aside>
 </div>
 <script src="city/config.js?v=2"></script>
-<script src="js/board.js?v=2"></script>
+<script src="js/board.js?v=3"></script>
 <script src="js/claim.js?v=1"></script>
-<script src="js/city.js?v=4"></script>
-<script src="js/explore.js?v=1"></script>
-<script src="js/app.js?v=1"></script>
+<script src="js/city.js?v=5"></script>
+<script src="js/explore.js?v=2"></script>
+<script src="js/app.js?v=2"></script>
 <script src="js/i18n.js?v=1"></script>
 <div class="mobilebar">
   <div class="mb-info"><small data-i18n="mb.district">District</small><b id="mb-dist">Nº 1 · Genesis</b></div>

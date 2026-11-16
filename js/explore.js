@@ -121,7 +121,7 @@
   }
 
   /* ---------- district drawer ---------- */
-  var wrap = $("drawer-wrap"), dwCountTimer = null, dwCtx = null, endCache = {};
+  var wrap = $("drawer-wrap"), dwCountTimer = null, dwCtx = null, endCache = {}, lastFocus = null;
   function padArg(n) { var h = n.toString(16); while (h.length < 64) h = "0" + h; return h; }
   function fetchDistrictEnd(n) {
     if (endCache[n]) return Promise.resolve(endCache[n]);
@@ -207,6 +207,7 @@
       });
     }
     openTs = Date.now();
+    lastFocus = document.activeElement;
     wrap.classList.add("open");
     wrap.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
@@ -222,6 +223,7 @@
     document.body.style.overflow = "";
     if (dwCountTimer) { clearInterval(dwCountTimer); dwCountTimer = null; }
     dwCtx = null;
+    if (lastFocus && lastFocus.focus) { try { lastFocus.focus({ preventScroll: true }); } catch (e) { /* noop */ } lastFocus = null; }
   }
   var closeBtn = $("drawer-close"), bg = $("drawer-bg");
   if (closeBtn) closeBtn.addEventListener("click", closeDrawer);
@@ -234,6 +236,7 @@
     var delta = (e.detail && e.detail.delta) || 1;
     var bs = boardState();
     var c = bs.running ? API.center(bs.running.n) : null;
+    if (c && API.toScreen) c = API.toScreen(c);
     var sr = stage.getBoundingClientRect(), cr = canvas.getBoundingClientRect();
     var x = sr.width / 2, y = sr.height * 0.3;
     if (c) {
@@ -248,21 +251,39 @@
     chip.classList.add("show");
   });
 
-  /* ---------- day-rhythm claim clock ---------- */
+  /* ---------- day-rhythm claim clock + light preview ---------- */
   var dcFill = $("dc-fill"), dcNeedle = $("dc-needle"), dcPhase = $("dc-phase"),
       dcNow = $("dc-now"), dcTrack = $("dc-track"), dcTip = $("dc-tip");
+  var dcSlider = $("dc-slider"), dcScrubT = $("dc-scrub-t"), dcLiveBtn = $("dc-live");
+  var dcPreview = null; // seconds into a day while previewing, else null
+  var dcIdleTimer = null;
   function phaseOf(sec) { return sec < 32400 ? "Sealed · claims pending" : "Claims open"; }
-  function tickClock() {
-    var now = new Date();
-    var sec = now.getUTCHours() * 3600 + now.getUTCMinutes() * 60 + now.getUTCSeconds();
+  function renderClock(sec, live) {
     var pct = (sec / 86400) * 100;
     if (dcFill) dcFill.style.width = pct + "%";
     if (dcNeedle) dcNeedle.style.left = pct + "%";
-    if (dcNow) dcNow.textContent = "Now · " + p2(now.getUTCHours()) + ":" + p2(now.getUTCMinutes()) + " UTC";
     if (dcPhase) {
       if (sec < 32400) dcPhase.innerHTML = "A district sealed at 00:00 UTC. <b>Claims for it open at 09:00 UTC</b>, in " + hms(32400 - sec) + ". A running district keeps building all day.";
       else dcPhase.innerHTML = "<b>Claims open now</b> for every sealed district. A running district seals at 00:00 UTC, in " + hms(86400 - sec) + ".";
     }
+    if (dcScrubT) {
+      dcScrubT.textContent = live
+        ? "Live clock"
+        : "Preview · " + p2(Math.floor(sec / 3600)) + ":" + p2(Math.floor((sec % 3600) / 60)) + " UTC · " + phaseOf(sec);
+    }
+  }
+  function tickClock() {
+    var now = new Date();
+    var sec = now.getUTCHours() * 3600 + now.getUTCMinutes() * 60 + now.getUTCSeconds();
+    if (dcNow) dcNow.textContent = "Now · " + p2(now.getUTCHours()) + ":" + p2(now.getUTCMinutes()) + " UTC";
+    if (dcPreview === null) renderClock(sec, true);
+  }
+  function endPreview() {
+    dcPreview = null;
+    if (dcIdleTimer) { clearTimeout(dcIdleTimer); dcIdleTimer = null; }
+    if (API && API.setLight) API.setLight(null);
+    if (dcLiveBtn) dcLiveBtn.hidden = true;
+    tickClock();
   }
   if (dcTrack) {
     tickClock();
@@ -277,5 +298,155 @@
       dcTip.classList.add("on");
     });
     dcTrack.addEventListener("pointerleave", function () { if (dcTip) dcTip.classList.remove("on"); });
+  }
+  if (dcSlider) {
+    var armSlider = function () {
+      if (dcPreview === null) {
+        var now = new Date();
+        dcSlider.value = now.getUTCHours() * 60 + now.getUTCMinutes();
+      }
+    };
+    dcSlider.addEventListener("pointerdown", armSlider);
+    dcSlider.addEventListener("focus", armSlider);
+    dcSlider.addEventListener("input", function () {
+      var min = parseInt(dcSlider.value, 10) || 0;
+      dcPreview = min * 60;
+      if (API && API.setLight) API.setLight(min / 60);
+      if (dcLiveBtn) dcLiveBtn.hidden = false;
+      renderClock(dcPreview, false);
+      if (dcIdleTimer) clearTimeout(dcIdleTimer);
+      dcIdleTimer = setTimeout(endPreview, 12000);
+    });
+  }
+  if (dcLiveBtn) dcLiveBtn.addEventListener("click", endPreview);
+
+  /* ---------- fly mode: cinematic camera over a plate ---------- */
+  var flyBtn = $("fly-btn");
+  if (flyBtn && API && API.flyStart) {
+    flyBtn.addEventListener("click", function () {
+      if (API.flying()) API.flyStop();
+      else API.flyStart();
+    });
+    window.addEventListener("urbanova:fly-state", function (e) {
+      var on = !!(e.detail && e.detail.flying);
+      flyBtn.textContent = on ? "Stop flight" : "Fly over the city";
+      flyBtn.setAttribute("aria-pressed", on ? "true" : "false");
+      flyBtn.classList.toggle("on", on);
+    });
+    if (reduce) flyBtn.hidden = true;
+  }
+
+  /* ---------- cursor glow in a hero (desktop, fine pointer) ---------- */
+  var glow = $("hero-glow");
+  if (glow && finePointer && !reduce) {
+    var gx = 0, gy = 0, tx2 = 0, ty2 = 0, glowRaf = null, glowOn = false;
+    function glowLoop() {
+      gx += (tx2 - gx) * 0.12; gy += (ty2 - gy) * 0.12;
+      glow.style.transform = "translate3d(" + gx.toFixed(1) + "px," + gy.toFixed(1) + "px,0) translate(-50%,-50%)";
+      if (glowOn || Math.abs(tx2 - gx) > 0.4 || Math.abs(ty2 - gy) > 0.4) glowRaf = requestAnimationFrame(glowLoop);
+      else glowRaf = null;
+    }
+    function glowKick() { if (!glowRaf) glowRaf = requestAnimationFrame(glowLoop); }
+    stage.addEventListener("pointermove", function (e) {
+      var r = stage.getBoundingClientRect();
+      tx2 = e.clientX - r.left; ty2 = e.clientY - r.top;
+      glowOn = true; glowKick();
+    });
+    stage.addEventListener("pointerleave", function () { glowOn = false; glowKick(); });
+  }
+
+  /* ---------- claim calculator ---------- */
+  var ccRange = $("cc-range"), ccN = $("cc-n"), ccRows = $("cc-rows"),
+      ccTotal = $("cc-total"), ccNote = $("cc-note"), ccBtns = document.querySelectorAll(".cc-cls");
+  if (ccRange && ccTotal && ccBtns.length) {
+    var CC_RATES = { 1: 2500, 2: 12500, 3: 60000, 4: 250000 };
+    var CC_NAMES = { 1: "Vacant", 2: "Block", 3: "Metropolis", 4: "Nova" };
+    var ccCls = 2, ccShown = 0, ccRaf = null;
+    function ccTween(to) {
+      if (reduce) { ccShown = to; ccTotal.textContent = fmt(to) + " $URBN"; return; }
+      var from = ccShown, t0 = null;
+      if (ccRaf) cancelAnimationFrame(ccRaf);
+      function step(ts) {
+        if (!t0) t0 = ts;
+        var p = Math.min(1, (ts - t0) / 450);
+        var e = 1 - Math.pow(1 - p, 3);
+        ccShown = Math.round(from + (to - from) * e);
+        ccTotal.textContent = fmt(ccShown) + " $URBN";
+        if (p < 1) ccRaf = requestAnimationFrame(step);
+      }
+      ccRaf = requestAnimationFrame(step);
+    }
+    function renderCC() {
+      var n = parseInt(ccRange.value, 10) || 1;
+      if (ccN) ccN.textContent = n;
+      if (ccRows) ccRows.textContent = n + (n === 1 ? " plot" : " plots") + " × " + fmt(CC_RATES[ccCls]) + " $URBN · " + CC_NAMES[ccCls];
+      if (ccNote) ccNote.textContent = ccCls === 4
+        ? "A Nova plot claims on its own seed, whatever a district verdict. Each claim also carries a fee in BNB, forwarded in a same transaction; a Nova plot pays double."
+        : "A rate follows a final district verdict at seal time. Each claim also carries a fee in BNB, forwarded to a project wallet in a same transaction.";
+      ccTween(n * CC_RATES[ccCls]);
+    }
+    ccBtns.forEach(function (b) {
+      b.addEventListener("click", function () {
+        ccCls = parseInt(b.getAttribute("data-cls"), 10) || 2;
+        ccBtns.forEach(function (x) {
+          var on = x === b;
+          x.classList.toggle("on", on);
+          x.setAttribute("aria-pressed", on ? "true" : "false");
+        });
+        renderCC();
+      });
+    });
+    ccRange.addEventListener("input", renderCC);
+    renderCC();
+  }
+
+  /* ---------- live activity feed (derived from board reads) ---------- */
+  var feedList = $("feed-list");
+  if (feedList) {
+    var feedSeen = null;
+    function utcHM() {
+      var d = new Date();
+      return p2(d.getUTCHours()) + ":" + p2(d.getUTCMinutes()) + " UTC";
+    }
+    function feedAdd(text) {
+      var wait = feedList.querySelector(".lf-wait");
+      if (wait) wait.remove();
+      var li = document.createElement("li");
+      li.innerHTML = "<time>" + utcHM() + "</time><span></span>";
+      li.querySelector("span").textContent = text;
+      feedList.insertBefore(li, feedList.firstChild);
+      while (feedList.children.length > 5) feedList.removeChild(feedList.lastChild);
+    }
+    function feedPoll() {
+      var bs = boardState();
+      if (!bs || !bs.running) return;
+      var snap = {
+        n: bs.running.n, plots: bs.running.plots, builders: bs.running.builders,
+        total: bs.total || 0, sealed: (bs.sealed || []).length,
+        lastSealed: bs.sealed && bs.sealed.length ? bs.sealed[bs.sealed.length - 1] : null
+      };
+      if (!feedSeen) {
+        if (snap.lastSealed) feedAdd("District Nº " + snap.lastSealed.n + " sealed · " + VERDICTS[snap.lastSealed.verdict || 1] + " · " + fmt(snap.lastSealed.plots) + " plots");
+        feedAdd("District Nº " + snap.n + " building · " + fmt(snap.plots) + " plots · " + fmt(snap.builders) + " builders");
+        feedSeen = snap;
+        return;
+      }
+      if (snap.sealed > feedSeen.sealed && snap.lastSealed) {
+        feedAdd("District Nº " + snap.lastSealed.n + " sealed · " + VERDICTS[snap.lastSealed.verdict || 1] + " · claims open 09:00 UTC");
+      } else if (snap.n === feedSeen.n && snap.plots > feedSeen.plots) {
+        var dPlots = snap.plots - feedSeen.plots;
+        feedAdd(dPlots === 1 ? "A plot was raised · District Nº " + snap.n + " at " + fmt(snap.plots) + " plots" : dPlots + " plots raised · District Nº " + snap.n + " at " + fmt(snap.plots) + " plots");
+      }
+      if (snap.n === feedSeen.n) {
+        [25, 101].forEach(function (th) {
+          if (feedSeen.builders < th && snap.builders >= th) {
+            feedAdd("District Nº " + snap.n + " passed " + (th === 25 ? "25" : "100") + " builders · " + (th === 25 ? "Block" : "Metropolis") + " pace");
+          }
+        });
+      }
+      feedSeen = snap;
+    }
+    setInterval(feedPoll, 2500);
+    feedPoll();
   }
 })();

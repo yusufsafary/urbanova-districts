@@ -102,11 +102,36 @@
   if ("IntersectionObserver" in window) {
     var rvEls = document.querySelectorAll(".sec, .facts-band, .class-card, .arch-card, .ladder, .console, .calc, .doc > h2, .doc > h3, .tiers, .prompt-box, .swap-card, .tok-bars");
     var rvIO = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) { e.target.classList.add("in"); rvIO.unobserve(e.target); }
+      entries.forEach(function (e, i) {
+        if (e.isIntersecting) {
+          var el = e.target;
+          el.style.transitionDelay = Math.min(i * 70, 280) + "ms";
+          el.classList.add("in");
+          setTimeout(function () { el.style.transitionDelay = ""; }, 1000);
+          rvIO.unobserve(el);
+        }
       });
     }, { threshold: 0.08, rootMargin: "0px 0px -4% 0px" });
     rvEls.forEach(function (el) { el.classList.add("rv"); rvIO.observe(el); });
+  }
+
+  /* Button ripple: a soft ink bloom from a press point, transform
+     and opacity only. Skipped under reduced motion. */
+  var reduceM = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!reduceM) {
+    document.addEventListener("pointerdown", function (e) {
+      var btn = e.target.closest ? e.target.closest(".btn, .copy-btn, .mb-btn") : null;
+      if (!btn) return;
+      var r = btn.getBoundingClientRect();
+      var s = document.createElement("span");
+      s.className = "ink-ripple";
+      var d = Math.max(r.width, r.height) * 1.1;
+      s.style.width = s.style.height = d + "px";
+      s.style.left = (e.clientX - r.left - d / 2) + "px";
+      s.style.top = (e.clientY - r.top - d / 2) + "px";
+      btn.appendChild(s);
+      setTimeout(function () { s.remove(); }, 680);
+    });
   }
 })();
 
